@@ -1,6 +1,8 @@
-import numpy as np
 import json
 import os
+
+import numpy as np
+
 from functions import function_switcher
 
 
@@ -18,17 +20,18 @@ class Algorithm:
             vector_y.append(function_switcher(self.kwargs['function'])(t, **self.kwargs))
         return vector_x, vector_y
 
-    def save_algorithm(self, filename, path='data'):
+    def save_algorithm(self, filename, path='files'):
         print(os.getcwd())
         json_kwargs = json.dumps(self.kwargs, indent=4)
         os.makedirs(os.getcwd() + '/' + path, exist_ok=True)
-        f = open(path + '/' + filename + '.json', 'w+')
+        f = open(path + '/' + filename, 'w+')
         f.write(json_kwargs)
         f.close()
 
-    def load_algorithm(self, filename, path='data'):
+    def load_algorithm(self, filename, path='files'):
         try:
-            f = open(path + '/' + filename + '.json', 'w+')
-            self.kwargs = json.loads(f)
+            with open(path + '/' + filename, 'r') as f:
+                self.kwargs = json.load(f)
+            return self
         except Exception:
             raise Exception('Cannot open {0}/{1}.json, file may not exists'.format(path, filename))

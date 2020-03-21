@@ -1,9 +1,14 @@
 # -*- coding: utf-8 -*-
 
-from PyQt5 import QtCore, QtWidgets
+import os
 
-from Plot import Plot
+from PyQt5 import QtCore, QtWidgets
+from PyQt5.QtCore import QDir
+from PyQt5.QtWidgets import QFileSystemModel
+
 from Algorithm import Algorithm
+from Plot import Plot
+from merging import add, subtract, multiply, divide
 
 
 class Ui_MainWindow(object):
@@ -330,8 +335,11 @@ class Ui_MainWindow(object):
         self.actionWczytaj = QtWidgets.QAction(MainWindow)
         self.actionWczytaj.setObjectName("actionWczytaj")
 
-        self.plot = Plot()
-        self.plot.show()
+        # Label Uwaga!
+        self.label_tab2 = QtWidgets.QLabel(self.tab_2)
+        self.label_tab2.setAlignment(QtCore.Qt.AlignCenter)
+        self.label_tab2.setObjectName("tab2")
+        self.label_tab2.move(140, 300)
 
         self.retranslateUi(MainWindow)
         self.tabWidget.setCurrentIndex(1)
@@ -339,6 +347,9 @@ class Ui_MainWindow(object):
         self.connect()
 
     def connect(self):
+        self.plot = Plot()
+        self.plot.show()
+        self.tabWidget.setCurrentIndex(0)
         self.fc_kwargs = {
             'function': 's1'
         }
@@ -375,7 +386,20 @@ class Ui_MainWindow(object):
         self.horizontalSlider_ts.valueChanged.connect(self.update)
         self.horizontalSlider_ns.valueChanged.connect(self.update)
         self.horizontalSlider_p.valueChanged.connect(self.update)
+        self.btn_save.clicked.connect(self.file_save)
+        self.btn_load.clicked.connect(self.file_load)
+        self.cb_method.addItems(['+', '-', '*', '/'])
+        self.pushButton.clicked.connect(self.on_merge)
 
+        path = QDir.current().path() + '/files/'
+        self.fileModel = QFileSystemModel()
+        self.fileModel.setRootPath(QDir.rootPath())
+        self.list_left.setModel(self.fileModel)
+        self.list_left.setRootIndex(self.fileModel.index(path))
+        self.list_right.setModel(self.fileModel)
+        self.list_right.setRootIndex(self.fileModel.index(path))
+
+    # on radio button click
     def on_radio(self):
         radio_button = self.centralwidget.sender()
         if radio_button.isChecked():
@@ -404,9 +428,54 @@ class Ui_MainWindow(object):
         self.label_p.setText(str(self.fc_kwargs['p']))
         self.prepare_plot()
 
+    # should be used after every single signal adjustments
     def prepare_plot(self):
-        alg = Algorithm(**self.fc_kwargs)
-        self.plot.vector_x, self.plot.vector_y = alg.perform_algorithm()
+        self.alg = Algorithm(**self.fc_kwargs)
+        self.plot.vector_x, self.plot.vector_y = self.alg.perform_algorithm()
+        self.plot.update()
+
+    # single signal save
+    def file_save(self):
+        os.makedirs(os.getcwd() + '/files', exist_ok=True)
+        name = QtWidgets.QFileDialog.getSaveFileName(
+            self.centralwidget, 'Save File', './files', '*.json')
+        if name[0] != '':
+            self.alg.save_algorithm(name[0].split('/')[-1])
+
+    # single signal load
+    def file_load(self):
+        os.makedirs(os.getcwd() + '/files', exist_ok=True)
+        name = QtWidgets.QFileDialog.getOpenFileName(
+            self.centralwidget, 'Open File', './files', '*.json')
+        if name[0] != '':
+            self.alg = Algorithm(**self.fc_kwargs)
+            self.alg.load_algorithm(name[0].split('/')[-1])
+            self.plot.vector_x, self.plot.vector_y = self.alg.perform_algorithm()
+            self.plot.update()
+
+    def choose_merge_method(self):
+        if self.cb_method.currentText() == '+':
+            self.merge_method = add
+        elif self.cb_method.currentText() == '-':
+            self.merge_method = subtract
+        elif self.cb_method.currentText() == '*':
+            self.merge_method = multiply
+        elif self.cb_method.currentText() == '/':
+            self.merge_method = divide
+
+    # on 'Scal' button
+    def on_merge(self):
+        # if nothing is selected skip
+        if len(self.list_left.selectedIndexes()) == 0 or len(self.list_right.selectedIndexes()) == 0:
+            return
+        right = self.list_right.selectedIndexes()[0]
+        left = self.list_left.selectedIndexes()[0]
+        alg1 = Algorithm(**self.fc_kwargs)
+        alg2 = Algorithm(**self.fc_kwargs)
+        alg1.load_algorithm(left.data())
+        alg2.load_algorithm(right.data())
+        self.choose_merge_method()
+        self.plot.vector_x, self.plot.vector_y = self.merge_method(alg1, alg2)
         self.plot.update()
 
     def retranslateUi(self, MainWindow):
@@ -449,6 +518,7 @@ class Ui_MainWindow(object):
         self.label_ts.setText(_translate("MainWindow", "ts"))
         self.label_ns.setText(_translate("MainWindow", "ns"))
         self.label_p.setText(_translate("MainWindow", "p"))
+        self.label_tab2.setText(_translate("MainWindow", "UWAGA! Parametry t1, d i f są przejmowane z lewego sygnału!"))
         self.groupBox.setTitle(_translate("MainWindow", "Sygnały"))
         self.radioButton_1.setText(_translate("MainWindow", "Szum o rozkładzie jednostajnym"))
         self.radioButton_2.setText(_translate("MainWindow", "Szum gaussowski"))
