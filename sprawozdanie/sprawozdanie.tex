@@ -1,0 +1,230 @@
+\documentclass[12pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[T1]{polski}
+\usepackage[cp1250]{inputenc}
+\newcommand{\BibTeX}{{\sc Bib}\TeX} 
+\usepackage{graphicx}
+\usepackage{amsfonts}
+\usepackage{float}
+
+\setlength{\textheight}{21cm}
+
+\title{{\bf Zadanie nr 1 - Generacja sygna³u i szumu}\linebreak
+Cyfrowe Przetwarzanie Sygna³ów}
+\author{ Piotr Ruciñski, 216878 \and Przemys³aw Rudowicz, 216879}
+\date{24.03.2020}
+
+\begin{document}
+\clearpage\maketitle
+\thispagestyle{empty}
+\newpage
+\setcounter{page}{1}
+\section{Cel zadania}
+
+Celem zadania jest zbadanie oraz zapoznanie siê z w³asnoœciami wybranych, podstawowych rodzajów sygna³ów i sposobów ich generowania
+oraz napisanie aplikacji, która umo¿liwi generowanie wykresów i histogramów sygna³ów.
+
+\section{Wstêp teoretyczny}
+
+Program zosta³ napisany w jêzyku programowania Python 3, zgodnie z opisem zadania. Graficzny interfejs u¿ytkownika zosta³‚ zaprogramowany
+przy pomocy biblioteki \texttt{PyQt5}. Zastosowanie interpretowanego jêzyka Python umo¿liwia odseparowanie programu od platformy na której zostanie
+uruchomiony program. Do generowania wykresów wykorzystywana jest biblioteka \texttt{matplotlib}. \\
+Po uruchomieniu aplikacji u¿tkownik zobaczy nastêpuj¹cy interfejs graficzny:
+
+\begin{figure}[H]
+	\centering
+		\includegraphics[width=1\textwidth]{{aplikacja/gui1.JPG}}
+	\caption{Interfejs u¿ytkownika}
+\end{figure}
+\pagebreak
+Zak³adka scal sygna³y umo¿liwia dokonanie na dwóch sygna³ach operacji. Dozwolone operacje to:
+\begin{enumerate}
+    \item dodawanie
+    \item odejmowanie
+    \item mno¿enie
+    \item dzielenie
+
+\end{enumerate}
+Warto dodaæ, ¿e parametry takie, jak czas pocz¹tkowy, d³ugoœæ sygna³u i czêstotliwoœæ próbkowania przyjête zostan¹ z sygna³u z lewej strony.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\textwidth]{{aplikacja/gui2.jpg}} 
+	\caption{Operacje na sygna³ach}
+\end{figure}
+Podczas uruchamiania programu otworzone zostanie drugie okno, na którym znajduje siê wykres. Wykres pojawi siê w oknie zaraz
+ po wybraniu go z poprzedniego menu. 
+\begin{figure}[H]
+	\centering
+		\includegraphics[width=1\textwidth]{{aplikacja/gui3.JPG}}
+	\caption{Widok wykresu}
+\end{figure}
+Znajduj¹ siê tutaj te¿ parametry sygna³u, takie jak:
+ \begin{enumerate}
+    \item œrednia
+    \item bezwzglêdna œrednia
+    \item wartoœæ skuteczna
+    \item wariancja
+    \item moc œrednia
+
+\end{enumerate}
+
+\pagebreak
+
+
+
+
+\section{Eksperymenty i wyniki}
+
+Opis wykonywanych eksperymentów. Wymagane jest ilustrowanie przeprowadzanych doœwiadczeñ wykresami oraz tabelami.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%% EKSPERYMENT #1  
+\subsection{Generowanie sygna³u sinusoidalnego}
+Celem eksperymentu by³o wygenerowanie sygna³u sinusoidalnego.
+Funkcja opisuj¹ca sygna³ sinusoidalny ma postaæ:
+\begin{figure}[H]
+	\centering
+	$x(t) = A\sin(\frac {2\pi} {T} (t-t_{1}))$
+\end{figure}
+
+\subsubsection{Za³o¿enia}
+Wartoœci parametrów s³u¿¹ce do wygenerowania sygna³u:
+\begin{itemize}
+	\item Amplituda = 1
+	\item Czas pocz¹tkowy = 0s
+	\item Czas trwania sygna³u = 10s
+	\item Okres podstawowy = 2s
+	\item Czêstotliwoœæ próbkowania = 600Hz
+\end{itemize}
+
+\subsubsection{Rezultat}
+Wygenerowany zosta³ sygna³:
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\textwidth]{{aplikacja/sinus-wykres.png}}
+	\caption{Wykres sygna³u sinusoidalnego wraz z histogramem}
+\end{figure}
+Parametry uzyskanego sygna³u to:
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\textwidth]{{aplikacja/sinus-parametry.jpg}}
+	\caption{Parametry sygna³u sinusoidalnego}
+\end{figure}
+\pagebreak
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%% EKSPERYMENT #2  
+\subsection{Generowanie sygna³u trójk¹tnego}
+Celem eksperymentu by³o wygenerowanie sygna³u trójk¹tnego.
+Funkcja opisuj¹ca sygna³ sinusoidalny ma postaæ:
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{{aplikacja/trojkat.png}}
+\end{figure}
+
+\subsubsection{Za³o¿enia}
+Wartoœci parametrów s³u¿¹ce do wygenerowania sygna³u:
+\begin{itemize}
+	\item Amplituda = 6
+	\item Czas pocz¹tkowy = 0s
+	\item Czas trwania sygna³u = 91s
+	\item Okres podstawowy = 2s
+	\item Wspó³czynnik wype³nienia = 0.25
+	\item Czêstotliwoœæ próbkowania = 500Hz
+\end{itemize}
+
+\subsubsection{Rezultat}
+Wygenerowany zosta³ nastêpuj¹cy sygna³: 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\textwidth]{{aplikacja/trojkatny-wykres.png}}
+	\caption{Wykres sygna³u trójk¹tnego wraz z histogramem}
+\end{figure}
+Parametry uzyskanego sygna³u to:
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\textwidth]{{aplikacja/trojkatny-parametry.jpg}}
+	\caption{Parametry sygna³u sinusoidalnego}
+\end{figure}
+\pagebreak
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%% EKSPERYMENT #3
+\newpage
+\subsubsection{Generowanie szumu gaussowskiego}
+Celem eksperymentu by³o wygenerowanie szumu gaussowskiego.
+\subsubsection{Za³o¿enia}
+Wartoœci parametrów s³u¿¹ce do wygenerowania sygna³u:
+\begin{itemize}
+	\item Amplituda = 3
+	\item Czas pocz¹tkowy = 5s
+	\item Czas trwania sygna³u = 20s
+	\item Okres podstawowy = 2.5s
+	\item Wspó³czynnik wype³nienia = 0.38
+	\item Czêstotliwoœæ próbkowania = 900Hz
+\end{itemize}
+
+\subsubsection{Rezultat}
+Wygenerowany zosta³ nastêpuj¹cy sygna³: 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\textwidth]{{aplikacja/szum-wykres.png}}
+	\caption{Wykres szumu gaussowskiego}
+\end{figure}
+Parametry uzyskanego sygna³u to:
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\textwidth]{{aplikacja/szum-parametry.jpg}}
+	\caption{Parametry wygenerowanego szumu}
+\end{figure}
+\pagebreak
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%% EKSPERYMENT #4
+\newpage
+\subsubsection{Scalenie sygna³u trojk¹tnego z szumem gaussowskim.}
+Celem eksperymentu by³o wygenerowanie sygna³u, bêd¹cego wynikiem sygna³u trójk¹tnego i szumu gaussowskiego.
+
+\subsubsection{Za³o¿enia}
+Funkcja, przy pomocy której zosta³ wygenerowany sygna³ to suma funkcji z eksperymentu nr. 2 i eksperymentu nr. 3.
+
+\subsubsection{Rezultat}
+Wygenerowany zosta³ nastêpuj¹cy sygna³: 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\textwidth]{{aplikacja/suma-wykres.png}}
+	\caption{Wykres sumy sygna³ów}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\textwidth]{{aplikacja/szum-parametry.jpg}}
+	\caption{Parametry sygna³u wygenerowanego przez suma-parametry}
+\end{figure}
+\pagebreak
+
+\section{Wnioski}
+
+Podczas pracy na laboratorium oraz realizuj¹c przedmiot zdalnie uda³o siê zaprogramowaæ aplikacjê spe³niaj¹c¹ wymagania zadania.
+Przeprowadzone eksperymenty pokazuj¹, ¿e aplikacja realizuje postawione wymagania, takie jak generowanie wybranego sygna³u,
+przedstawienie jego wykresu i histogramu, zapis i odczyt wykresu z pliku, przedstawienie parametrów wykresu.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% PODROZDZIAï¿½ PT. ZALACZNIKI
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Za³¹czniki}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% BIBLIOGRAFIA
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\renewcommand\refname{Bibliografia}
+\bibliographystyle{plain}
+\bibliography{bibliografia_wzor}
+
+\end{document}
