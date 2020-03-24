@@ -12,7 +12,7 @@ class Plot(QDialog):
     def __init__(self, parent=None):
         super(Plot, self).__init__(parent)
 
-        self.figure = plt.figure(figsize=(15, 8))
+        self.figure = plt.figure(figsize=(10, 4))
         # this is the Canvas Widget that displays the `figure`
         # it takes the `figure` instance as a parameter to __init__
         self.canvas = FigureCanvas(self.figure)
@@ -34,12 +34,13 @@ class Plot(QDialog):
         self.sl_bins.valueChanged.connect(self.update)
 
         # set the layout
-        self.upper_layout = QHBoxLayout()
+        self.upper_layout = QVBoxLayout()
         self.create_labels()
         layout = QVBoxLayout()
         layout.addWidget(self.toolbar)
         layout.addLayout(self.upper_layout)
         layout.addWidget(self.canvas)
+
         layout.addWidget(self.sl_bins)
         layout.addWidget(self.button)
         self.setLayout(layout)
@@ -52,6 +53,7 @@ class Plot(QDialog):
         ax.plot(self.vector_x, self.vector_y, linestyle='-', marker='o', color='red', markersize=1.4)
         ax.grid(True)
         ax.margins(0.01, 0.05)
+        ax.set_xlabel('t[s]')
 
         # histogram
         ax = self.figure.add_subplot(122)
@@ -65,34 +67,49 @@ class Plot(QDialog):
         labs = []
         for lab in ['Średnia: ', 'Bezwględna średnia: ', 'Wartość skuteczna: ', 'Wariancja: ', 'Moc średnia: ']:
             l_lab = QLabel()
-            l_lab.setAlignment(Qt.AlignCenter)
+            l_lab.setAlignment(Qt.AlignLeft)
             l_lab.setText(lab)
             labs.append(l_lab)
 
         self.l_mean = QLabel()
-        self.l_mean.setAlignment(Qt.AlignCenter)
-        self.upper_layout.addWidget(labs[0])
-        self.upper_layout.addWidget(self.l_mean)
+        self.l_mean.setAlignment(Qt.AlignLeft)
+        mean_layout = QHBoxLayout()
+        mean_layout.addWidget(labs[0])
+        mean_layout.addWidget(self.l_mean)
+        mean_layout.addSpacing(600)
+        self.upper_layout.addLayout(mean_layout)
 
         self.l_absmean = QLabel()
-        self.l_absmean.setAlignment(Qt.AlignCenter)
-        self.upper_layout.addWidget(labs[1])
-        self.upper_layout.addWidget(self.l_absmean)
+        self.l_absmean.setAlignment(Qt.AlignLeft)
+        abs_layout = QHBoxLayout()
+        abs_layout.addWidget(labs[1])
+        abs_layout.addWidget(self.l_absmean)
+        abs_layout.addSpacing(600)
+        self.upper_layout.addLayout(abs_layout)
 
         self.l_ws = QLabel()
-        self.l_ws.setAlignment(Qt.AlignCenter)
-        self.upper_layout.addWidget(labs[2])
-        self.upper_layout.addWidget(self.l_ws)
+        self.l_ws.setAlignment(Qt.AlignLeft)
+        ws_layout = QHBoxLayout()
+        ws_layout.addWidget(labs[2])
+        ws_layout.addWidget(self.l_ws)
+        ws_layout.addSpacing(600)
+        self.upper_layout.addLayout(ws_layout)
 
         self.l_war = QLabel()
-        self.l_war.setAlignment(Qt.AlignCenter)
-        self.upper_layout.addWidget(labs[3])
-        self.upper_layout.addWidget(self.l_war)
+        self.l_war.setAlignment(Qt.AlignLeft)
+        war_layout = QHBoxLayout()
+        war_layout.addWidget(labs[3])
+        war_layout.addWidget(self.l_war)
+        war_layout.addSpacing(600)
+        self.upper_layout.addLayout(war_layout)
 
         self.l_ms = QLabel()
-        self.l_ms.setAlignment(Qt.AlignCenter)
-        self.upper_layout.addWidget(labs[4])
-        self.upper_layout.addWidget(self.l_ms)
+        self.l_ms.setAlignment(Qt.AlignLeft)
+        ms_layout = QHBoxLayout()
+        ms_layout.addWidget(labs[4])
+        ms_layout.addWidget(self.l_ms)
+        ms_layout.addSpacing(600)
+        self.upper_layout.addLayout(ms_layout)
 
     def update_labels(self):
         self.l_mean.setText(str(round(st.mean(self.vector_x, self.vector_y), 2)))
