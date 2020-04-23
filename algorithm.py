@@ -1,5 +1,6 @@
 import json
 import os
+from copy import deepcopy
 
 import numpy as np
 
@@ -10,6 +11,9 @@ class Algorithm:
 
     def __init__(self, **kwargs):
         self.kwargs = kwargs
+
+    def __copy__(self):
+        return deepcopy(self)
 
     def perform_algorithm(self):
         vector_y = []
@@ -35,3 +39,4 @@ class Algorithm:
             return self
         except Exception:
             raise Exception('Cannot open {0}/{1}.json, file may not exists'.format(path, filename))
+

@@ -1,4 +1,16 @@
-from Algorithm import Algorithm
+from numpy import nan
+
+from algorithm import Algorithm
+
+
+def merge_switcher(merging_code):
+    switcher = {
+        '+': add,
+        '-': subtract,
+        '*': multiply,
+        '/': divide
+    }
+    return switcher.get(merging_code, add)
 
 
 def _decorator(func):
@@ -12,14 +24,6 @@ def _decorator(func):
         return func(alg1, alg2)
 
     return function_wrapper
-
-
-@_decorator
-def add(alg1, alg2):
-    vector_x, vector_y1 = alg1.perform_algorithm()
-    _, vector_y2 = alg2.perform_algorithm()
-    assert len(vector_y1) == len(vector_y2)
-    return vector_x, [y1 + y2 for y1, y2 in zip(vector_y1, vector_y2)]
 
 
 @_decorator
@@ -56,5 +60,7 @@ def divide(alg1, alg2):
         if y2 != 0:
             vector_y.append(y1 / y2)
         else:
-            vector_y.append(None)
+            vector_y.append(nan)
+        print('{} / {}'.format(y1, y2))
+    print(vector_y)
     return vector_x, vector_y
