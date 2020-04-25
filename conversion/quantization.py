@@ -14,8 +14,11 @@ def quantization_switcher(quantization_code):
 
 def quantization(vector_y, quantization_steps):
     max_y, min_y = max(vector_y), min(vector_y)
-    diff = (max_y - min_y) / quantization_steps
-    return list(arange(min_y, max_y + diff, diff))
+    if quantization_steps > 1:
+        diff = (max_y - min_y) / (quantization_steps - 1)
+        return list(arange(min_y, max_y + diff, diff))
+    else:
+        return [(max_y + min_y) / 2]
 
 
 def _decorator(func):

@@ -20,8 +20,14 @@ def s1(f, vector_x, vector_y):
     new_vx, new_vy = [], []
     sampled_x = vector_x[0]
     for i, (x, y) in enumerate(zip(vector_x, vector_y)):
-        while sampled_x <= x:
+        while round(sampled_x, 5) < round(x, 5):
             new_vx.append(sampled_x)
-            new_vy.append(y)
+            new_vy.append(vector_y[i - 1])
             sampled_x += f
-    return  new_vx, new_vy
+        else:
+            if round(sampled_x, 5) == round(x, 5):
+                new_vx.append(sampled_x)
+                new_vy.append(y)
+                sampled_x += f
+
+    return new_vx, new_vy

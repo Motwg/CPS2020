@@ -345,6 +345,7 @@ class Ui_MainWindow(object):
     def prepare_plot(self):
         self.alg = Algorithm(**self.fc_kwargs)
         self.plot.set_alg(self.alg)
+        self.tab_3.update()
 
     # single signal save
     def file_save(self):
@@ -377,6 +378,7 @@ class Ui_MainWindow(object):
         alg2.load_algorithm(right.data())
         self.plot.merge_method = merge_switcher(self.cb_method.currentText())
         self.plot.set_alg(alg1, alg2)
+        self.tab_3.update()
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
