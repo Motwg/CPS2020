@@ -15,22 +15,19 @@ def reconstruction_switcher(reconstruction_code):
 def _decorator(func):
     def function_wrapper(alg1, alg2, merge):
         assert isinstance(alg1, Algorithm)
-        alg4 = None
-        if alg2 is not None:
+        if alg2 is not None and merge is not None:
             assert isinstance(alg2, Algorithm)
-            alg4 = alg2.__copy__()
-        alg3 = alg1.__copy__()
-        return func(alg3, alg4, merge)
+            vector_x, vector_y = merge(alg1, alg2)
+        else:
+            vector_x, vector_y = alg1.perform_algorithm()
+
+        return func(vector_x, vector_y)
 
     return function_wrapper
 
-@_decorator
-def r1(alg1, alg2, merge):
-    if merge is None or alg2 is None:
-        vector_x, vector_y = alg1.perform_algorithm()
-    else:
-        vector_x, vector_y = merge(alg1, alg2)
 
+@_decorator
+def r1(vector_x, vector_y):
     new_x, new_y = [], []
     for i, (x, y) in enumerate(zip(vector_x, vector_y)):
         new_x.append(x)
@@ -40,13 +37,9 @@ def r1(alg1, alg2, merge):
             new_y.append(y)
     return new_x, new_y
 
-@_decorator
-def r2(alg1, alg2, merge):
-    if merge is None or alg2 is None:
-        vector_x, vector_y = alg1.perform_algorithm()
-    else:
-        vector_x, vector_y = merge(alg1, alg2)
 
+@_decorator
+def r2(vector_x, vector_y):
     new_x, new_y = [], []
     for i, (x, y) in enumerate(zip(vector_x, vector_y)):
         new_x.append(x)
@@ -56,18 +49,14 @@ def r2(alg1, alg2, merge):
             new_y.append((y + vector_y[i + 1]) / 2)
     return new_x, new_y
 
+
 @_decorator
-def r3(alg1, alg2, merge):
+def r3(vector_x, vector_y):
     def sinc(x):
         if x != 0:
             return sin(pi * x) / (pi * x)
         else:
             return 1
-
-    if merge is None or alg2 is None:
-        vector_x, vector_y = alg1.perform_algorithm()
-    else:
-        vector_x, vector_y = merge(alg1, alg2)
 
     new_x, new_y = [], []
     for i, (x, y) in enumerate(zip(vector_x, vector_y)):
@@ -77,5 +66,5 @@ def r3(alg1, alg2, merge):
             middle_x = (x + vector_x[i + 1]) / 2
             middle_y = (y + vector_y[i + 1]) / 2
             new_x.append(middle_x)
-            new_y.append(middle_y * sinc(x / alg1.kwargs['f'] - i))
+            new_y.append(middle_y * sinc(x / (vector_x[i + 1] - x) - i))
     return new_x, new_y

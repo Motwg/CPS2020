@@ -1,4 +1,4 @@
-from PyQt5 import QtCore, QtWidgets
+from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QHBoxLayout
 
 from conversion.quantization import quantization_switcher
@@ -18,16 +18,20 @@ class ConversionTab(QWidget):
         self.textb_sampling = QtWidgets.QLineEdit(self)
         self.textb_sampling.setText('{:.1f}'.format(self.sampling_f))
         # quantization
+        self.quantization_steps = 8
         self.chb_quantization = QtWidgets.QCheckBox(self)
         self.cb_quantization = QtWidgets.QComboBox(self)
         self.cb_quantization.addItems(['Q2'])
+        self.textb_quanztization = QtWidgets.QLineEdit(self)
+        self.textb_quanztization.setText('%d' % self.quantization_steps)
         # reconstruction
         self.chb_reconstruction = QtWidgets.QCheckBox(self)
         self.cb_reconstruction = QtWidgets.QComboBox(self)
         self.cb_reconstruction.addItems(['R1', 'R2', 'R3'])
 
         layout = [[QLabel('Próbkowanie'), self.chb_sampling, QLabel('f'), self.textb_sampling],
-                  [QLabel('Kwantyzacja'), self.chb_quantization, self.cb_quantization],
+                  [QLabel('Kwantyzacja'), self.chb_quantization, self.cb_quantization,
+                   QLabel('Poziomy kwantyzacji'), self.textb_quanztization],
                   [QLabel('Rekonstrukcja'), self.chb_reconstruction, self.cb_reconstruction]]
         for y in layout:
             h_box = QHBoxLayout()
@@ -47,7 +51,8 @@ class ConversionTab(QWidget):
     def update(self):
         extras = [None, None, None]
         if self.chb_sampling.isChecked():
-            x, y = s1(1 / float(self.textb_sampling.text()), self.plot.alg1, self.plot.alg2, self.plot.merge_method)
+            x, y = s1(1 / float(self.textb_sampling.text()),
+                      self.plot.alg1, self.plot.alg2, self.plot.merge_method)
             extras[0] = [x, y, {
                 'color': 'orange',
                 'marker': 'o',
@@ -56,7 +61,7 @@ class ConversionTab(QWidget):
             }]
         if self.chb_quantization.isChecked():
             x, y = quantization_switcher(self.cb_quantization.currentText()) \
-                (self.plot.alg1, self.plot.alg2, self.plot.merge_method)
+                (float(self.textb_quanztization.text()), self.plot.alg1, self.plot.alg2, self.plot.merge_method)
             extras[1] = [x, y, {
                 'color': 'blue',
                 'marker': 'o',

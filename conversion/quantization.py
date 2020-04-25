@@ -1,3 +1,7 @@
+from math import fabs
+
+from numpy import arange
+
 from algorithm import Algorithm
 
 
@@ -8,36 +12,34 @@ def quantization_switcher(quantization_code):
     return switcher.get(quantization_code.lower(), q2)
 
 
-def _decorator(func):
+def quantization(vector_y, quantization_steps):
+    max_y, min_y = max(vector_y), min(vector_y)
+    diff = (max_y - min_y) / quantization_steps
+    return list(arange(min_y, max_y + diff, diff))
 
-    def function_wrapper(alg1, alg2, merge):
+
+def _decorator(func):
+    def function_wrapper(steps, alg1, alg2, merge):
         assert isinstance(alg1, Algorithm)
-        alg4 = None
-        if alg2 is not None:
+        if alg2 is not None and merge is not None:
             assert isinstance(alg2, Algorithm)
-            alg4 = alg2.__copy__()
-        alg3 = alg1.__copy__()
-        return func(alg3, alg4, merge)
+            vector_x, vector_y = merge(alg1, alg2)
+        else:
+            vector_x, vector_y = alg1.perform_algorithm()
+        return vector_x, func(vector_y, quantization(vector_y, steps))
 
     return function_wrapper
 
 
 # Kwantyzacja z zaokrągleniem
 @_decorator
-def q2(alg1, alg2, merge):
-    if merge is None or alg2 is None:
-        vector_x, vector_y = alg1.perform_algorithm()
-    else:
-        vector_x, vector_y = merge(alg1, alg2)
-
-    new_x, new_y = [], []
-    for i, (x, y) in enumerate(zip(vector_x, vector_y)):
-        new_x.append(x)
-        new_y.append(y)
-        if i % 2 == 1 and i < len(vector_x) - 1:
-            new_x.append(vector_x[i + 1])
-            new_y.append(y)
-        elif i < len(vector_x) - 1:
-            new_x.append(x)
-            new_y.append(vector_y[i + 1])
-    return new_x, new_y
+def q2(vector_y, values):
+    def approximate(y, quantization_values):
+        assert isinstance(quantization_values, list)
+        nearest, dist = quantization_values[0], fabs(y - quantization_values[0])
+        for value in quantization_values:
+            new_dist = fabs(y - value)
+            if new_dist < dist:
+                nearest, dist = value, new_dist
+        return nearest
+    return [approximate(y, values) for y in vector_y]
