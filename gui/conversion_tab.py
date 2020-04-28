@@ -93,8 +93,8 @@ class ConversionTab(QWidget):
             extras[0] = [x, y, {
                 'color': 'orange',
                 'marker': 'o',
-                'linestyle': '-',
-                'markersize': 2
+                'linestyle': ' ',
+                'markersize': 4
             }]
             # sampling + reconstruction
             if self.chb_reconstruction.isChecked():
