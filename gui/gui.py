@@ -75,8 +75,8 @@ class Ui_MainWindow(object):
         self.label_11 = QtWidgets.QLabel(self.verticalLayoutWidget_2)
         self.horizontalLayout_6.addWidget(self.label_11)
         self.horizontalSlider_T = QtWidgets.QSlider(self.verticalLayoutWidget_2)
-        self.horizontalSlider_T.setMinimum(0)
-        self.horizontalSlider_T.setMaximum(90)
+        self.horizontalSlider_T.setMinimum(1)
+        self.horizontalSlider_T.setMaximum(1000)
         self.horizontalSlider_T.setOrientation(QtCore.Qt.Horizontal)
         self.horizontalLayout_6.addWidget(self.horizontalSlider_T)
         self.label_12 = QtWidgets.QLabel(self.verticalLayoutWidget_2)
@@ -169,7 +169,7 @@ class Ui_MainWindow(object):
         self.label_A = QtWidgets.QLabel(self.verticalLayoutWidget_4)
         self.label_A.setAlignment(QtCore.Qt.AlignCenter)
         self.verticalLayout_4.addWidget(self.label_A)
-        self.label_T = QtWidgets.QLabel(self.verticalLayoutWidget_4)
+        self.label_T = QLineEdit(self.verticalLayoutWidget_4)
         self.label_T.setAlignment(QtCore.Qt.AlignCenter)
         self.verticalLayout_4.addWidget(self.label_T)
         self.label_kw = QtWidgets.QLabel(self.verticalLayoutWidget_4)
@@ -297,6 +297,7 @@ class Ui_MainWindow(object):
         self.cb_method.addItems(['+', '-', '*', '/'])
         self.pushButton.clicked.connect(self.on_merge)
         self.label_f.returnPressed.connect(self.on_f_field_change)
+        self.label_T.returnPressed.connect(self.on_f_field_change)
 
         path = QDir.current().path() + '/files/'
         self.fileModel = QFileSystemModel()
@@ -317,6 +318,8 @@ class Ui_MainWindow(object):
     def on_f_field_change(self):
         value = float(self.label_f.text())
         self.horizontalSlider_f.setValue(value)
+        value = float(self.label_T.text())
+        self.horizontalSlider_T.setValue(value)
         self.update()
 
     def update(self):
@@ -325,7 +328,8 @@ class Ui_MainWindow(object):
         self.fc_kwargs['f'] = 1 / self.horizontalSlider_f.value()
         self.fc_kwargs['t2'] = self.horizontalSlider_d.value() - self.horizontalSlider_t1.value()
         self.fc_kwargs['A'] = self.horizontalSlider_A.value()
-        self.fc_kwargs['T'] = self.horizontalSlider_T.value() / 10 + 1
+        self.fc_kwargs['T'] = self.horizontalSlider_T.value()
+        self.fc_kwargs['T'] = 1 / self.horizontalSlider_T.value()
         self.fc_kwargs['kw'] = self.horizontalSlider_kw.value() / 100
         self.fc_kwargs['ts'] = self.horizontalSlider_ts.value()
         self.fc_kwargs['ns'] = self.horizontalSlider_ns.value()
@@ -334,7 +338,7 @@ class Ui_MainWindow(object):
         self.label_d.setText(str(self.fc_kwargs['d']))
         self.label_f.setText('{:.1f}'.format(self.horizontalSlider_f.value()))
         self.label_A.setText(str(self.fc_kwargs['A']))
-        self.label_T.setText(str(self.fc_kwargs['T']))
+        self.label_T.setText('{:.1f}'.format(self.horizontalSlider_T.value()))
         self.label_kw.setText(str(self.fc_kwargs['kw']))
         self.label_ts.setText(str(self.fc_kwargs['ts']))
         self.label_ns.setText(str(self.fc_kwargs['ns']))
@@ -393,7 +397,7 @@ class Ui_MainWindow(object):
         self.label_9.setText(_translate("MainWindow", "0"))
         self.label_10.setText(_translate("MainWindow", "100"))
         self.label_11.setText(_translate("MainWindow", "1"))
-        self.label_12.setText(_translate("MainWindow", "10"))
+        self.label_12.setText(_translate("MainWindow", "1000"))
         self.label_13.setText(_translate("MainWindow", "0"))
         self.label_14.setText(_translate("MainWindow", "1"))
         self.label_15.setText(_translate("MainWindow", "0"))
