@@ -15,10 +15,9 @@ class ConversionTab(QWidget):
         main_layout = QVBoxLayout(self)
 
         # sampling
-        self.sampling_f = 100
         self.chb_sampling = QtWidgets.QCheckBox(self)
         self.textb_sampling = QtWidgets.QLineEdit(self)
-        self.textb_sampling.setText('{:.1f}'.format(self.sampling_f))
+        self.textb_sampling.setText('{:.1f}'.format(100.0))
         # reconstruction
         self.chb_reconstruction = QtWidgets.QCheckBox(self)
         self.cb_reconstruction = QtWidgets.QComboBox(self)
@@ -33,12 +32,11 @@ class ConversionTab(QWidget):
                   [QLabel('MD'), self.sr_label_md]]
         layouting(sr_layout, layout)
         # quantization
-        self.quantization_steps = 8
         self.chb_quantization = QtWidgets.QCheckBox(self)
         self.cb_quantization = QtWidgets.QComboBox(self)
         self.cb_quantization.addItems(['Q2'])
         self.textb_quanztization = QtWidgets.QLineEdit(self)
-        self.textb_quanztization.setText('%d' % self.quantization_steps)
+        self.textb_quanztization.setText('%d' % 8)
         # info <= quantization
         q_layout = QVBoxLayout()
         self.q_label_mse = QLabel()
