@@ -10,31 +10,44 @@ class ConvolutionTab(QWidget):
         self.plot = plot
         main_layout = QVBoxLayout(self)
 
-        # filtering
-        self.filtering_k = 8
-        self.textb_k = QLineEdit(self)
-        self.textb_k.setText('%d' % self.filtering_k)
-        self.filtering_m = 7
-        self.textb_m = QLineEdit(self)
-        self.textb_m.setText('%d' % self.filtering_m)
-        self.chb_filtering = QCheckBox(self)
+        # filtering bottom rect
+        self.textb_k1 = QLineEdit(self)
+        self.textb_k1.setText('%d' % 8)
+        self.textb_m1 = QLineEdit(self)
+        self.textb_m1.setText('%d' % 7)
+        self.chb_filtering1 = QCheckBox(self)
+
+        # filtering second
+        self.textb_k2 = QLineEdit(self)
+        self.textb_k2.setText('%d' % 8)
+        self.textb_m2 = QLineEdit(self)
+        self.textb_m2.setText('%d' % 7)
+        self.chb_filtering2 = QCheckBox(self)
 
         # together
-        layout = [[QLabel('Filtr'), self.chb_filtering, QLabel('K'), self.textb_k, QLabel('M'), self.textb_m]]
+        layout = [[QLabel('Filtr dolnoprzepustowy'), self.chb_filtering1,
+                   QLabel('K'), self.textb_k1, QLabel('M'), self.textb_m1],
+                  [QLabel('Filtr drugi'), self.chb_filtering2,
+                   QLabel('K'), self.textb_k2, QLabel('M'), self.textb_m2]]
         self.setLayout(layouting(main_layout, layout))
         self.connect()
 
     def connect(self):
-        self.chb_filtering.stateChanged.connect(self.update)
-        self.textb_m.returnPressed.connect(self.update)
-        self.textb_k.returnPressed.connect(self.update)
+        # filtering bottom rect
+        self.chb_filtering1.stateChanged.connect(self.update)
+        self.textb_m1.returnPressed.connect(self.update)
+        self.textb_k1.returnPressed.connect(self.update)
+        # filtering second
+        self.chb_filtering2.stateChanged.connect(self.update)
+        self.textb_m2.returnPressed.connect(self.update)
+        self.textb_k2.returnPressed.connect(self.update)
 
     def update(self):
-        extras = [None, None]
+        extras = [None, None, None]
         analog = (self.plot.alg1, self.plot.alg2, self.plot.merge_method)
-        # filtering
-        if self.chb_filtering.isChecked():
-            x, y, h = filter_response(int(self.textb_m.text()), int(self.textb_k.text()), *analog)
+        # filtering bottom rect
+        if self.chb_filtering1.isChecked():
+            x, y, h = filter_response(int(self.textb_m1.text()), int(self.textb_k1.text()), *analog)
             self.plot.vector_x = x
             extras[0] = [x, y, {
                 'color': 'orange',
@@ -42,10 +55,21 @@ class ConvolutionTab(QWidget):
                 'linestyle': '-',
                 'markersize': 4
             }]
+            # debug h(n)
             extras[1] = [x[:len(h)], h, {
                 'color': 'green',
                 'marker': 'o',
                 'linestyle': '-',
                 'markersize': 3
+            }]
+        if self.chb_filtering2.isChecked():
+            # todo change to new proper function
+            x, y, h = filter_response(int(self.textb_m1.text()), int(self.textb_k1.text()), *analog)
+            self.plot.vector_x = x
+            extras[2] = [x, y, {
+                'color': 'blue',
+                'marker': 'o',
+                'linestyle': '-',
+                'markersize': 4
             }]
         self.plot.set_extras(extras)
