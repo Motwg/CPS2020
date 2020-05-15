@@ -38,8 +38,14 @@ def hanning_window(n, M):
 #  trzeba poprawic uzywajac powyzszych funkcji i splotu
 @_decorator
 def filter_response(M, K, vector_y):
-    print(vector_y)
     vector_h = [filter_bottom_sinc(n, M, K) for n in range(M)]
-    print(vector_h)
+    # vector_h = vector_h + [0] * (len(vector_y) - len(vector_h))
     filtered_vector_y = convolution(vector_h, vector_y, K)
+    # return add_vectors(filtered_vector_y, vector_y), vector_h
     return filtered_vector_y + vector_y[len(filtered_vector_y):], vector_h
+
+
+def add_vectors(v1, v2):
+    if len(v2) > len(v1):
+        v1, v2 = v2, v1
+    return [x - y for x, y in zip(v1, v2)] + v1[len(v2):]

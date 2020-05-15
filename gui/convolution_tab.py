@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QCheckBox, QLineEdit
 
 from convolutions.filter import filter_response
-from gui.conversion_tab import layouting
+from gui.utils import layouting
 
 
 class ConvolutionTab(QWidget):

@@ -39,9 +39,9 @@ def s4_sin_one_side(t, **kwargs):
     return kwargs['A'] / 2 * (
             math.sin(math.pi * 2 / kwargs['T'] * (t - kwargs['t1']))
             + math.fabs(
-        math.sin(math.pi * 2 / kwargs['T'] * (t - kwargs['t1']))
-    )
-    )
+                math.sin(math.pi * 2 / kwargs['T'] * (t - kwargs['t1']))
+            )
+        )
 
 
 # Sygnał sinusoidalny wyprostowany dwupołówkowo
