@@ -2,7 +2,7 @@ from math import fabs
 
 from numpy import arange
 
-from algorithm import Algorithm
+from core.algorithm import Algorithm
 
 
 def quantization_switcher(quantization_code):

@@ -1,6 +1,7 @@
 from numpy import nan
 
-from algorithm import Algorithm
+from convolutions import convolution
+from core.algorithm import Algorithm
 
 
 def merge_switcher(merging_code):
@@ -8,7 +9,8 @@ def merge_switcher(merging_code):
         '+': add,
         '-': subtract,
         '*': multiply,
-        '/': divide
+        '/': divide,
+        '(h * x)(n)': convolution_merge
     }
     return switcher.get(merging_code, add)
 
@@ -61,6 +63,22 @@ def divide(alg1, alg2):
             vector_y.append(y1 / y2)
         else:
             vector_y.append(nan)
-        print('{} / {}'.format(y1, y2))
-    print(vector_y)
     return vector_x, vector_y
+
+
+def convolution_merge(alg1, alg2):
+    assert isinstance(alg1, Algorithm)
+    assert isinstance(alg2, Algorithm)
+    vector_x1, vector_y1 = alg1.perform_algorithm()
+    vector_x2, vector_y2 = alg2.perform_algorithm()
+    vector_y = convolution.convolution(vector_y1, vector_y2)
+    return [x for x in range(len(vector_y))], vector_y
+
+
+def perform_merge(alg1, alg2, merge_method):
+    assert isinstance(alg1, Algorithm)
+    if alg2 is not None and merge_method is not None:
+        assert isinstance(alg2, Algorithm)
+        return merge_method(alg1, alg2)
+    else:
+        return alg1.perform_algorithm()

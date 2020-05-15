@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import QDialog, QPushButton, QVBoxLayout, QSlider, QHBoxLay
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
 
-import statistics as st
+from core import statistics as st
 
 
 class Plot(QDialog):

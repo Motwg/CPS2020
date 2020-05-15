@@ -1,7 +1,7 @@
 from collections import deque
 from math import sin, pi
 
-from algorithm import Algorithm
+from core.merging import perform_merge
 
 
 def reconstruction_switcher(reconstruction_code):
@@ -15,13 +15,7 @@ def reconstruction_switcher(reconstruction_code):
 
 def _decorator(func):
     def function_wrapper(vector_x, vector_y, alg1, alg2, merge):
-        assert isinstance(alg1, Algorithm)
-        if alg2 is not None and merge is not None:
-            assert isinstance(alg2, Algorithm)
-            analog_x, analog_y = merge(alg1, alg2)
-        else:
-            analog_x, analog_y = alg1.perform_algorithm()
-
+        analog_x, analog_y = perform_merge(alg1, alg2, merge)
         return func(vector_x, vector_y, analog_x)
 
     return function_wrapper

@@ -1,16 +1,11 @@
-from algorithm import Algorithm
+from core.merging import perform_merge
 
 
 def _decorator(func):
 
     def function_wrapper(f, alg1, alg2, merge):
-        assert isinstance(alg1, Algorithm)
-        if alg2 is not None and merge is not None:
-            assert isinstance(alg2, Algorithm)
-            vector_x, vector_y = merge(alg1, alg2)
-        else:
-            vector_x, vector_y = alg1.perform_algorithm()
-        return func(f, vector_x, vector_y)
+        analog_x, analog_y = perform_merge(alg1, alg2, merge)
+        return func(f, analog_x, analog_y)
     return function_wrapper
 
 

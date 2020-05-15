@@ -1,7 +1,7 @@
 from itertools import starmap
 from math import fabs, log10
 
-from algorithm import Algorithm
+from core.algorithm import Algorithm
 
 
 def similarity_switcher(similarity_code):

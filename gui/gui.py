@@ -6,10 +6,11 @@ from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtCore import QDir
 from PyQt5.QtWidgets import QFileSystemModel, QLineEdit
 
-from algorithm import Algorithm
+from core.algorithm import Algorithm
+from core.merging import merge_switcher
 from gui.conversion_tab import ConversionTab
+from gui.convolution_tab import ConvolutionTab
 from gui.plot import Plot
-from merging import merge_switcher
 
 
 class Ui_MainWindow(object):
@@ -248,6 +249,10 @@ class Ui_MainWindow(object):
         self.tab_3 = ConversionTab(self.plot)
         self.tabWidget.addTab(self.tab_3, "")
 
+        # tab 'Sploty'
+        self.tab_4 = ConvolutionTab(self.plot)
+        self.tabWidget.addTab(self.tab_4, "")
+
         # finalise
         MainWindow.setCentralWidget(self.centralwidget)
         self.retranslateUi(MainWindow)
@@ -294,7 +299,7 @@ class Ui_MainWindow(object):
         self.horizontalSlider_p.valueChanged.connect(self.update)
         self.btn_save.clicked.connect(self.file_save)
         self.btn_load.clicked.connect(self.file_load)
-        self.cb_method.addItems(['+', '-', '*', '/'])
+        self.cb_method.addItems(['+', '-', '*', '/', '(h * x)(n)'])
         self.pushButton.clicked.connect(self.on_merge)
         self.label_f.returnPressed.connect(self.on_f_field_change)
         self.label_T.returnPressed.connect(self.on_f_field_change)
@@ -317,9 +322,9 @@ class Ui_MainWindow(object):
     # on change in f field
     def on_f_field_change(self):
         value = float(self.label_f.text())
-        self.horizontalSlider_f.setValue(value)
+        self.horizontalSlider_f.setValue(int(value))
         value = float(self.label_T.text())
-        self.horizontalSlider_T.setValue(value)
+        self.horizontalSlider_T.setValue(int(value))
         self.update()
 
     def update(self):
@@ -350,6 +355,7 @@ class Ui_MainWindow(object):
         self.alg = Algorithm(**self.fc_kwargs)
         self.plot.set_alg(self.alg)
         self.tab_3.update()
+        self.tab_4.update()
 
     # single signal save
     def file_save(self):
@@ -383,6 +389,7 @@ class Ui_MainWindow(object):
         self.plot.merge_method = merge_switcher(self.cb_method.currentText())
         self.plot.set_alg(alg1, alg2)
         self.tab_3.update()
+        self.tab_4.update()
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -445,3 +452,4 @@ class Ui_MainWindow(object):
         self.pushButton_3.setText(_translate("MainWindow", "Wczytaj"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("MainWindow", "Scal sygnały"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), _translate("MainWindow", "Konwersja"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_4), _translate("MainWindow", "Sploty"))
