@@ -39,6 +39,7 @@ def hanning_window(n, M):
 @_decorator
 def filter_response(M, K, vector_y):
     print(vector_y)
-    vector_h = [filter_bottom_rect(n, M, K) for n in range(M)]
+    vector_h = [filter_bottom_sinc(n, M, K) for n in range(M)]
     print(vector_h)
-    return convolution(vector_h, vector_y, K), vector_h
+    filtered_vector_y = convolution(vector_h, vector_y, K)
+    return filtered_vector_y + vector_y[len(filtered_vector_y):], vector_h
