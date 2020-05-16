@@ -1,4 +1,3 @@
-
 import matplotlib.pyplot as plt
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QDialog, QPushButton, QVBoxLayout, QSlider, QHBoxLayout, QLabel
@@ -44,7 +43,8 @@ class Plot(QDialog):
         layout.addWidget(self.sl_bins)
         layout.addWidget(self.button)
         self.setLayout(layout)
-        self.vector_x, self.vector_y, self.alg1, self.alg2, self.merge_method= None, None, None, None, None
+        self.show_main = True
+        self.vector_x, self.vector_y, self.alg1, self.alg2, self.merge_method = None, None, None, None, None
         self.extras = [None, None, None]
 
     def update(self):
@@ -56,7 +56,8 @@ class Plot(QDialog):
 
         # plot
         ax = self.figure.add_subplot(121)
-        ax.plot(self.vector_x, self.vector_y, linestyle='-', marker='o', color='red', markersize=1.4)
+        if self.show_main:
+            ax.plot(self.vector_x, self.vector_y, linestyle='-', marker='o', color='red', markersize=1.4)
         for extra in self.extras:
             if extra is not None:
                 ax.plot(extra[0], extra[1], **extra[2])
