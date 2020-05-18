@@ -1,6 +1,7 @@
 from math import sin, pi
 
 from convolutions.convolution import convolution
+from convolutions.window import window_switcher
 from core.merging import perform_merge
 
 
@@ -43,11 +44,10 @@ def filter_response(M, K, vector_y, filter_pos="f0", window=None):
         # funkcja okna(sinc)
         # vector_h = [window_switcher(window)(n, M) for n in vector_h]
         # funkcja okna * sinc
-        '''        
         vector_h = multiply_vectors(
             vector_h,
             [window_switcher(window)(n, M) for n in range(M)]
-        ) '''
+        )
     if filter_pos == 'f2':
         # to w zasadzie "zeruje" odpowiedz, nie wiem czy tak powinno byc
         vector_h = multiply_vectors(
@@ -58,7 +58,7 @@ def filter_response(M, K, vector_y, filter_pos="f0", window=None):
     filtered_vector_y = convolution(vector_h, vector_y, K)
     # return convolution(filtered_vector_y, vector_y), vector_h
     # return add_vectors(filtered_vector_y, vector_y), vector_h
-    return filtered_vector_y + vector_y[len(filtered_vector_y):], vector_h
+    return filtered_vector_y, vector_h  # + vector_y[len(filtered_vector_y):], vector_h
 
 
 def multiply_vectors(v1, v2):
