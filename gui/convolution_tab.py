@@ -37,9 +37,9 @@ class ConvolutionTab(QWidget):
 
         # together
         layout = [[QLabel('Filtr dolnoprzepustowy'), self.chb_filtering1,
-                   QLabel('K'), self.textb_k1, QLabel('M'), self.textb_m1, QLabel('fs'), self.textb_fs1],
+                   QLabel('f0'), self.textb_k1, QLabel('M'), self.textb_m1, QLabel('fs'), self.textb_fs1],
                   [QLabel('Filtr górnoprzepustowy Hanning'), self.chb_filtering2,
-                   QLabel('K'), self.textb_k2, QLabel('M'), self.textb_m2, QLabel('fs'), self.textb_fs2],
+                   QLabel('f0'), self.textb_k2, QLabel('M'), self.textb_m2, QLabel('fs'), self.textb_fs2],
                   [QLabel('Korelacja'), self.chb_correlation,
                    QLabel('Opóźnienie w próbkach'), self.textb_delay,
                    QLabel('Pokaż korelacje'), self.chb_correlation_show]

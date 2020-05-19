@@ -36,7 +36,7 @@ def filter_bottom_rect(n, M, K):
 def filter_response(M, K, fs, vector_y, filter_pos="f0", window=None):
     #  vector_h = [filter_bottom_rect_sinc(n, M, K) for n in range(M)]
     print(fs)
-    vector_h = signal.firwin(M, fs / K, fs=fs).tolist()
+    vector_h = signal.firwin(M, K, fs=fs).tolist()
     print(vector_h)
     if window is not None:
         # splot funkcji okna sinc
