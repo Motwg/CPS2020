@@ -16,6 +16,8 @@ class ConvolutionTab(QWidget):
         self.textb_k1.setText('%d' % 8)
         self.textb_m1 = QLineEdit(self)
         self.textb_m1.setText('%d' % 7)
+        self.textb_fs1 = QLineEdit(self)
+        self.textb_fs1.setText('{:4.1f}'.format(1.0))
         self.chb_filtering1 = QCheckBox(self)
 
         # filtering f2 o2
@@ -23,6 +25,8 @@ class ConvolutionTab(QWidget):
         self.textb_k2.setText('%d' % 8)
         self.textb_m2 = QLineEdit(self)
         self.textb_m2.setText('%d' % 7)
+        self.textb_fs2 = QLineEdit(self)
+        self.textb_fs2.setText('{:4.1f}'.format(1.0))
         self.chb_filtering2 = QCheckBox(self)
 
         # correlation
@@ -33,9 +37,9 @@ class ConvolutionTab(QWidget):
 
         # together
         layout = [[QLabel('Filtr dolnoprzepustowy'), self.chb_filtering1,
-                   QLabel('K'), self.textb_k1, QLabel('M'), self.textb_m1],
+                   QLabel('K'), self.textb_k1, QLabel('M'), self.textb_m1, QLabel('fs'), self.textb_fs1],
                   [QLabel('Filtr górnoprzepustowy Hanning'), self.chb_filtering2,
-                   QLabel('K'), self.textb_k2, QLabel('M'), self.textb_m2],
+                   QLabel('K'), self.textb_k2, QLabel('M'), self.textb_m2, QLabel('fs'), self.textb_fs2],
                   [QLabel('Korelacja'), self.chb_correlation,
                    QLabel('Opóźnienie w próbkach'), self.textb_delay,
                    QLabel('Pokaż korelacje'), self.chb_correlation_show]
@@ -48,10 +52,12 @@ class ConvolutionTab(QWidget):
         self.chb_filtering1.stateChanged.connect(self.update)
         self.textb_m1.returnPressed.connect(self.update)
         self.textb_k1.returnPressed.connect(self.update)
+        self.textb_fs1.returnPressed.connect(self.update)
         # filtering f2 o2
         self.chb_filtering2.stateChanged.connect(self.update)
         self.textb_m2.returnPressed.connect(self.update)
         self.textb_k2.returnPressed.connect(self.update)
+        self.textb_fs1.returnPressed.connect(self.update)
         # correlation
         self.chb_correlation.stateChanged.connect(self.update)
         self.textb_delay.returnPressed.connect(self.update)
@@ -64,7 +70,9 @@ class ConvolutionTab(QWidget):
         self.plot.show_main = True
         # filtering bottom rect
         if self.chb_filtering1.isChecked():
+            print(float(self.textb_fs1.text()))
             x, y, h = filter_response(int(self.textb_m1.text()), int(self.textb_k1.text()),
+                                      float(self.textb_fs1.text()),
                                       'f0', None, *analog)
             self.plot.vector_x = x
             extras[0] = [x, y, {
@@ -81,7 +89,8 @@ class ConvolutionTab(QWidget):
                 'markersize': 3
             }]
         if self.chb_filtering2.isChecked():
-            x, y, h = filter_response(int(self.textb_m1.text()), int(self.textb_k1.text()),
+            x, y, h = filter_response(int(self.textb_m2.text()), int(self.textb_k2.text()),
+                                      float(self.textb_fs2.text()),
                                       'f2', 'o2', *analog)
             self.plot.vector_x = x
             extras[2] = [x, y, {

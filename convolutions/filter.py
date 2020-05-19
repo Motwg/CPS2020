@@ -1,14 +1,15 @@
 from math import sin, pi
 
-from convolutions.convolution import convolution
+from scipy import signal
+
 from convolutions.window import window_switcher
 from core.merging import perform_merge
 
 
 def _decorator(func):
-    def function_wrapper(M, K, filter_pos, window, alg1, alg2, merge):
+    def function_wrapper(M, K, fs, filter_pos, window, alg1, alg2, merge):
         _, analog_y = perform_merge(alg1, alg2, merge)
-        vector_y, vector_h = func(M, K, analog_y, filter_pos, window)
+        vector_y, vector_h = func(M, K, fs, analog_y, filter_pos, window)
         return list(range(len(vector_y))), vector_y, vector_h
 
     return function_wrapper
@@ -32,8 +33,11 @@ def filter_bottom_rect(n, M, K):
 
 # todo w komentarzach wypisalem mozliwe kombinacje, jednak zadna nie wydaje mi sie poprawna
 @_decorator
-def filter_response(M, K, vector_y, filter_pos="f0", window=None):
-    vector_h = [filter_bottom_rect_sinc(n, M, K) for n in range(M)]
+def filter_response(M, K, fs, vector_y, filter_pos="f0", window=None):
+    #  vector_h = [filter_bottom_rect_sinc(n, M, K) for n in range(M)]
+    print(fs)
+    vector_h = signal.firwin(M, fs / K, fs=fs).tolist()
+    print(vector_h)
     if window is not None:
         # splot funkcji okna sinc
         '''
@@ -55,10 +59,12 @@ def filter_response(M, K, vector_y, filter_pos="f0", window=None):
             [pow(-1, n) for n in range(M)]
         )
     # vector_h = vector_h + [0] * (len(vector_y) - len(vector_h))
-    filtered_vector_y = convolution(vector_h, vector_y, K)
+    # filtered_vector_y = convolution(vector_h, vector_y, K)
     # return convolution(filtered_vector_y, vector_y), vector_h
     # return add_vectors(filtered_vector_y, vector_y), vector_h
-    return filtered_vector_y, vector_h  # + vector_y[len(filtered_vector_y):], vector_h
+
+    # return filtered_vector_y, vector_h  # + vector_y[len(filtered_vector_y):], vector_h
+    return signal.upfirdn(vector_h, vector_y).tolist(), vector_h
 
 
 def multiply_vectors(v1, v2):
