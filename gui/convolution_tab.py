@@ -12,21 +12,21 @@ class ConvolutionTab(QWidget):
         main_layout = QVBoxLayout(self)
 
         # filtering bottom rect
-        self.textb_k1 = QLineEdit(self)
-        self.textb_k1.setText('%d' % 8)
+        self.textb_fo1 = QLineEdit(self)
+        self.textb_fo1.setText('{:4.1f}'.format(1.0))
         self.textb_m1 = QLineEdit(self)
         self.textb_m1.setText('%d' % 7)
         self.textb_fs1 = QLineEdit(self)
-        self.textb_fs1.setText('{:4.1f}'.format(1.0))
+        self.textb_fs1.setText('{:4.1f}'.format(8.0))
         self.chb_filtering1 = QCheckBox(self)
 
         # filtering f2 o2
-        self.textb_k2 = QLineEdit(self)
-        self.textb_k2.setText('%d' % 8)
+        self.textb_fo2 = QLineEdit(self)
+        self.textb_fo2.setText('{:4.1f}'.format(1.0))
         self.textb_m2 = QLineEdit(self)
         self.textb_m2.setText('%d' % 7)
         self.textb_fs2 = QLineEdit(self)
-        self.textb_fs2.setText('{:4.1f}'.format(1.0))
+        self.textb_fs2.setText('{:4.1f}'.format(8.0))
         self.chb_filtering2 = QCheckBox(self)
 
         # correlation
@@ -37,9 +37,9 @@ class ConvolutionTab(QWidget):
 
         # together
         layout = [[QLabel('Filtr dolnoprzepustowy'), self.chb_filtering1,
-                   QLabel('K'), self.textb_k1, QLabel('M'), self.textb_m1, QLabel('fs'), self.textb_fs1],
+                   QLabel('fo'), self.textb_fo1, QLabel('M'), self.textb_m1, QLabel('fs'), self.textb_fs1],
                   [QLabel('Filtr górnoprzepustowy Hanning'), self.chb_filtering2,
-                   QLabel('K'), self.textb_k2, QLabel('M'), self.textb_m2, QLabel('fs'), self.textb_fs2],
+                   QLabel('fo'), self.textb_fo2, QLabel('M'), self.textb_m2, QLabel('fs'), self.textb_fs2],
                   [QLabel('Korelacja'), self.chb_correlation,
                    QLabel('Opóźnienie w próbkach'), self.textb_delay,
                    QLabel('Pokaż korelacje'), self.chb_correlation_show]
@@ -51,12 +51,12 @@ class ConvolutionTab(QWidget):
         # filtering bottom rect
         self.chb_filtering1.stateChanged.connect(self.update)
         self.textb_m1.returnPressed.connect(self.update)
-        self.textb_k1.returnPressed.connect(self.update)
+        self.textb_fo1.returnPressed.connect(self.update)
         self.textb_fs1.returnPressed.connect(self.update)
         # filtering f2 o2
         self.chb_filtering2.stateChanged.connect(self.update)
         self.textb_m2.returnPressed.connect(self.update)
-        self.textb_k2.returnPressed.connect(self.update)
+        self.textb_fo2.returnPressed.connect(self.update)
         self.textb_fs1.returnPressed.connect(self.update)
         # correlation
         self.chb_correlation.stateChanged.connect(self.update)
@@ -70,8 +70,7 @@ class ConvolutionTab(QWidget):
         self.plot.show_main = True
         # filtering bottom rect
         if self.chb_filtering1.isChecked():
-            print(float(self.textb_fs1.text()))
-            x, y, h = filter_response(int(self.textb_m1.text()), int(self.textb_k1.text()),
+            x, y, h = filter_response(int(self.textb_m1.text()), float(self.textb_fo1.text()),
                                       float(self.textb_fs1.text()),
                                       'f0', None, *analog)
             self.plot.vector_x = x
@@ -89,7 +88,7 @@ class ConvolutionTab(QWidget):
                 'markersize': 3
             }]
         if self.chb_filtering2.isChecked():
-            x, y, h = filter_response(int(self.textb_m2.text()), int(self.textb_k2.text()),
+            x, y, h = filter_response(int(self.textb_m2.text()), float(self.textb_fo2.text()),
                                       float(self.textb_fs2.text()),
                                       'f2', 'o2', *analog)
             self.plot.vector_x = x
@@ -115,7 +114,7 @@ class ConvolutionTab(QWidget):
                     'color': 'red',
                     'marker': 'o',
                     'linestyle': '-',
-                    'markersize': 4
+                    'markersize': 3
                 }]
                 # delayed
                 extras[5] = [x, y2, {

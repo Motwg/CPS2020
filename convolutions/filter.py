@@ -7,10 +7,10 @@ from core.merging import perform_merge
 
 
 def _decorator(func):
-    def function_wrapper(M, K, fs, filter_pos, window, alg1, alg2, merge):
-        _, analog_y = perform_merge(alg1, alg2, merge)
-        vector_y, vector_h = func(M, K, fs, analog_y, filter_pos, window)
-        return list(range(len(vector_y))), vector_y, vector_h
+    def function_wrapper(M, fo, fs, filter_pos, window, alg1, alg2, merge):
+        analog_x, analog_y = perform_merge(alg1, alg2, merge)
+        vector_y, vector_h = func(M, fo, fs, analog_y, filter_pos, window)
+        return extend(analog_x, len(vector_y)), vector_y, vector_h
 
     return function_wrapper
 
@@ -33,11 +33,9 @@ def filter_bottom_rect(n, M, K):
 
 # todo w komentarzach wypisalem mozliwe kombinacje, jednak zadna nie wydaje mi sie poprawna
 @_decorator
-def filter_response(M, K, fs, vector_y, filter_pos="f0", window=None):
+def filter_response(M, fo, fs, vector_y, filter_pos="f0", window=None):
     #  vector_h = [filter_bottom_rect_sinc(n, M, K) for n in range(M)]
-    print(fs)
-    vector_h = signal.firwin(M, fs / K, fs=fs).tolist()
-    print(vector_h)
+    vector_h = signal.firwin(M, fo, fs=fs).tolist()
     if window is not None:
         # splot funkcji okna sinc
         '''
@@ -77,3 +75,9 @@ def add_vectors(v1, v2):
     if len(v2) > len(v1):
         v1, v2 = v2, v1
     return [x + y for x, y in zip(v1, v2)] + v1[len(v2):]
+
+
+def extend(v, length):
+    while len(v) < length:
+        v.append(v[-1] + v[1] - v[0])
+    return v
