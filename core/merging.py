@@ -2,6 +2,7 @@ from numpy import nan
 
 from convolutions import convolution
 from core.algorithm import Algorithm
+from core.utils import extend
 
 
 def merge_switcher(merging_code):
@@ -72,7 +73,7 @@ def convolution_merge(alg1, alg2):
     vector_x1, vector_y1 = alg1.perform_algorithm()
     vector_x2, vector_y2 = alg2.perform_algorithm()
     vector_y = convolution.convolution(vector_y1, vector_y2)
-    return [x for x in range(len(vector_y))], vector_y
+    return extend(vector_x1, (len(vector_y))), vector_y
 
 
 def perform_merge(alg1, alg2, merge_method):

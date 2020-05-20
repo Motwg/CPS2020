@@ -1,7 +1,5 @@
 
 
-# funkcja oznaczona w opisie jako 3 do splotu
-# todo nie wiem czy parametr K powinien tu byc? mowa jest o jakims obcieciu f
 def convolution(vector_y1, vector_y2, K=1):
     vector_y = []
     cut_vector_y2 = vector_y2  # [:len(vector_y2) // K]
