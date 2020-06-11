@@ -11,6 +11,7 @@ from core.merging import merge_switcher
 from gui.conversion_tab import ConversionTab
 from gui.convolution_tab import ConvolutionTab
 from gui.plot import Plot
+from gui.transformation_tab import TransformationTab
 
 
 class Ui_MainWindow(object):
@@ -253,6 +254,10 @@ class Ui_MainWindow(object):
         self.tab_4 = ConvolutionTab(self.plot)
         self.tabWidget.addTab(self.tab_4, "")
 
+        # tab 'Transformacje'
+        self.tab_5 = TransformationTab(self.plot)
+        self.tabWidget.addTab(self.tab_5, "")
+
         # finalise
         MainWindow.setCentralWidget(self.centralwidget)
         self.retranslateUi(MainWindow)
@@ -356,6 +361,7 @@ class Ui_MainWindow(object):
         self.plot.set_alg(self.alg)
         self.tab_3.update()
         self.tab_4.update()
+        self.tab_5.update()
 
     # single signal save
     def file_save(self):
@@ -453,3 +459,4 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("MainWindow", "Scal sygnały"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), _translate("MainWindow", "Konwersja"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_4), _translate("MainWindow", "Sploty"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_5), _translate("MainWindow", "Transformacje"))

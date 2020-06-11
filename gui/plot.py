@@ -63,7 +63,7 @@ class Plot(QDialog):
         self.show_main = True
         self.vector_x, self.vector_y, self.vector_i = None, None, None
         self.alg1, self.alg2, self.merge_method = None, None, None
-        self.extras = [None, None, None]
+        self.extras, self.extras_i = [], []
 
     def update(self):
         self.figure.clear()
@@ -84,16 +84,20 @@ class Plot(QDialog):
                 ax_i.plot(self.vector_x, self.vector_i, linestyle='-', marker='o', color='red', markersize=1.4)
                 ax_i.grid(True)
                 ax_i.margins(0.01, 0.05)
-                ax_i.set_xlabel('t[s]')
+                ax_i.set_xlabel('t[s]') if self.cb_plot.currentText() == 'W1' else 0
             else:
                 # histogram
-                ax_i = self.figure.add_subplot(313)
                 ax_i.hist(self.vector_y, bins=self.sl_bins.value())
                 ax_i.grid(True)
 
         for extra in self.extras:
             if extra is not None:
                 ax.plot(extra[0], extra[1], **extra[2])
+
+        if self.cb_hist.currentText() == 'Img plot':
+            for extra in self.extras_i:
+                if extra is not None:
+                    ax_i.plot(extra[0], extra[1], **extra[2])
 
         self.canvas.draw()
         self.update_labels()
@@ -103,8 +107,10 @@ class Plot(QDialog):
         self.alg2 = alg2
         self.update()
 
-    def set_extras(self, extras):
+    def set_extras(self, extras, extras_i=None):
         self.extras = extras
+        if extras_i is not None:
+            self.extras_i = extras_i
         self.update()
 
     def create_labels(self):

@@ -14,7 +14,10 @@ def function_switcher(function_code):
         's8': s8_triangle,
         's9': s9_unit_j,
         's10': s10_unit_imp,
-        's11': s11_noise_imp
+        's11': s11_noise_imp,
+        's101': s101,
+        's102': s102,
+        's103': s103
     }
     return switcher.get(function_code, s12)
 
@@ -104,3 +107,15 @@ def s11_noise_imp(t, **kwargs):
 
 def s12(t, **kwargs):
     return t
+
+
+def s101(t, **kwargs):
+    return 2 * math.sin(math.pi * t + math.pi / 2) + 5 * math.sin(4 * math.pi * t + math.pi / 2)
+
+
+def s102(t, **kwargs):
+    return 2 * math.sin(math.pi * t) + math.sin(2 * math.pi * t) + 5 * math.sin(4 * math.pi * t)
+
+
+def s103(t, **kwargs):
+    return 5 * math.sin(math.pi * t) + math.sin(8 * math.pi * t)
