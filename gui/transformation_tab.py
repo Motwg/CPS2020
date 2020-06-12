@@ -1,7 +1,10 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QCheckBox, QComboBox, QLabel
 
+from core.merging import perform_merge
+from core.utils import split_complex
 from gui.utils import layouting
 from transformation.sample_signals import signal_switcher
+from transformation.transformation import transformation_switcher
 
 
 class TransformationTab(QWidget):
@@ -18,7 +21,7 @@ class TransformationTab(QWidget):
         # choose transformation and inverted transformation
         self.chb_transformation = QCheckBox(self)
         self.cb_transformation = QComboBox(self)
-        self.cb_transformation.addItems(['F2', 'T3'])
+        self.cb_transformation.addItems(['DFT', 'F2', 'T3'])
 
         self.chb_i_transformation = QCheckBox(self)
 
@@ -37,20 +40,42 @@ class TransformationTab(QWidget):
         self.cb_transformation.currentIndexChanged.connect(self.update)
 
     def update(self):
-        extras = [None]
-        extras_i = [None]
+        extras = [None, None]
+        extras_i = [None, None]
         if self.chb_signal.isChecked():
             self.plot.alg1.kwargs['f'] = 1 / 16
             self.plot.alg1.kwargs['function'] = signal_switcher(self.cb_signal.currentText())
 
         if self.chb_transformation.isChecked():
-            analog = (self.plot.alg1, self.plot.alg2, self.plot.merge_method)
-            extras[0] = (0, 0, {
-                     'color': 'orange',
+            method, i_method = transformation_switcher(self.cb_transformation.currentText())
+            v_x, v_y = perform_merge(self.plot.alg1, self.plot.alg2, self.plot.merge_method)
+            transformed_y = method(v_y)
+            real_transformed_y, imag_transformed_y = split_complex(transformed_y, self.plot.cb_plot.currentText())
+            extras[0] = (v_x, real_transformed_y, {
+                     'color': 'blue',
                      'marker': 'o',
-                     'linestyle': ' ',
-                     'markersize': 4
+                     'linestyle': (0, (5, 10)),
+                     'markersize': 3
+                 })
+            extras_i[0] = (v_x, imag_transformed_y, {
+                     'color': 'blue',
+                     'marker': 'o',
+                     'linestyle': (0, (5, 10)),
+                     'markersize': 3
                  })
             if self.chb_i_transformation.isChecked():
-                pass
+                transformed_y = i_method(transformed_y)
+                real_transformed_y, imag_transformed_y = split_complex(transformed_y, self.plot.cb_plot.currentText())
+                extras[1] = (v_x, real_transformed_y, {
+                    'color': 'orange',
+                    'marker': 'o',
+                    'linestyle': (0, (5, 10)),
+                    'markersize': 3
+                })
+                extras_i[1] = (v_x, imag_transformed_y, {
+                    'color': 'orange',
+                    'marker': 'o',
+                    'linestyle': (0, (5, 10)),
+                    'markersize': 3
+                })
         self.plot.set_extras(extras, extras_i)
