@@ -1,3 +1,5 @@
+import time
+
 import numpy as np
 from pywt import dwt, idwt  # pip install PyWavelets
 from scipy.fft import fft, ifft
@@ -14,6 +16,18 @@ def transformation_switcher(transformation_code):
     return switcher.get(transformation_code.lower(), 'f2')
 
 
+def _decorator(func):
+    def function_wrapper(vector):
+        assert isinstance(vector, list)
+        start = time.perf_counter()
+        result = func(vector)
+        stop = time.perf_counter()
+        return result, stop - start
+
+    return function_wrapper
+
+
+@_decorator
 def dft(vector_y):
     v_y = []
     vector_y_len = len(vector_y)
@@ -25,6 +39,7 @@ def dft(vector_y):
     return v_y
 
 
+@_decorator
 def idft(vector_y):
     v_y = []
     vector_y_len = len(vector_y)
@@ -36,14 +51,17 @@ def idft(vector_y):
     return v_y
 
 
+@_decorator
 def fft2f(vector_y):
     return list(fft(vector_y, n=len(vector_y)))
 
 
+@_decorator
 def ifft2f(vector_y):
     return list(ifft(vector_y))
 
 
+@_decorator
 def db4(vector_y):
     global last_db4_cD
     real, last_db4_cD = dwt(vector_y, 'db4')
@@ -51,6 +69,7 @@ def db4(vector_y):
     return list(real)
 
 
+@_decorator
 def idb4(vector_y):
     global last_db4_cD
     real = list(idwt(vector_y, last_db4_cD, 'db4'))
@@ -59,8 +78,8 @@ def idb4(vector_y):
 
 if __name__ == '__main__':
     vec = np.sin(2. * np.pi / 8 * np.arange(0, 8))
-    dvec = dft(vec)
-    idvec = idft(dvec)
+    dvec, t = dft(vec)
+    idvec, t = idft(dvec)
 
     print(vec)
     print(dvec)

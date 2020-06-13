@@ -25,6 +25,10 @@ class TransformationTab(QWidget):
 
         self.chb_i_transformation = QCheckBox(self)
 
+        # timers
+        self.l_tran_timer = QLabel('0.0 s')
+        self.l_i_tran_timer = QLabel('0.0 s')
+
         # Refresh
         self.button = QPushButton('Generate')
 
@@ -32,7 +36,9 @@ class TransformationTab(QWidget):
         # together
         layout = [[QLabel('Sygnał zadaniowy'), self.chb_signal, self.cb_signal],
                   [QLabel('Transformacja '), self.cb_transformation, self.chb_transformation],
+                  [QLabel('Czas: '), self.l_tran_timer],
                   [QLabel('Odwrotna transformacja '), self.chb_i_transformation],
+                  [QLabel('Czas: '), self.l_i_tran_timer],
                   [self.button]]
         self.setLayout(layouting(main_layout, layout))
         self.connect()
@@ -48,6 +54,8 @@ class TransformationTab(QWidget):
     def update(self):
         extras = [None, None]
         extras_i = [None, None]
+
+        # set pre-made function
         if self.chb_signal.isChecked():
             self.plot.alg1.kwargs['f'] = 1 / 16
             self.plot.alg1.kwargs['function'] = signal_switcher(self.cb_signal.currentText())
@@ -55,7 +63,9 @@ class TransformationTab(QWidget):
         if self.chb_transformation.isChecked() or self.chb_i_transformation.isChecked():
             method, i_method = transformation_switcher(self.cb_transformation.currentText())
             v_x, v_y = perform_merge(self.plot.alg1, self.plot.alg2, self.plot.merge_method)
-            transformed_y = method(v_y)
+            transformed_y, time = method(v_y)
+
+            self.l_tran_timer.setText('{:f}'.format(time) + ' s')
 
         if self.chb_transformation.isChecked():
             real_transformed_y, imag_transformed_y = split_complex(transformed_y, self.plot.cb_plot.currentText())
@@ -72,8 +82,11 @@ class TransformationTab(QWidget):
                      'markersize': 3
                  })
         if self.chb_i_transformation.isChecked():
-            transformed_y = i_method(transformed_y)
+            transformed_y, time = i_method(transformed_y)
             real_transformed_y, imag_transformed_y = split_complex(transformed_y, self.plot.cb_plot.currentText())
+
+            self.l_i_tran_timer.setText('{:f}'.format(time) + ' s')
+
             extras[1] = (v_x, real_transformed_y, {
                 'color': 'orange',
                 'marker': 'o',
