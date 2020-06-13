@@ -59,13 +59,13 @@ class TransformationTab(QWidget):
 
         if self.chb_transformation.isChecked():
             real_transformed_y, imag_transformed_y = split_complex(transformed_y, self.plot.cb_plot.currentText())
-            extras[0] = (v_x, real_transformed_y, {
+            extras[0] = (v_x[:len(real_transformed_y)], real_transformed_y, {
                      'color': 'blue',
                      'marker': 'o',
                      'linestyle': (0, (5, 10)),
                      'markersize': 3
                  })
-            extras_i[0] = (v_x, imag_transformed_y, {
+            extras_i[0] = (v_x[:len(imag_transformed_y)], imag_transformed_y, {
                      'color': 'blue',
                      'marker': 'o',
                      'linestyle': (0, (5, 10)),

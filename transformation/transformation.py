@@ -1,5 +1,8 @@
 import numpy as np
+from pywt import dwt, idwt  # pip install PyWavelets
 from scipy.fft import fft, ifft
+
+last_db4_cD = []
 
 
 def transformation_switcher(transformation_code):
@@ -41,12 +44,17 @@ def ifft2f(vector_y):
     return list(ifft(vector_y))
 
 
-def db4():
-    pass
+def db4(vector_y):
+    global last_db4_cD
+    real, last_db4_cD = dwt(vector_y, 'db4')
+    # list(map(lambda r, i: complex(r, i), real, imag))
+    return list(real)
 
 
-def idb4():
-    pass
+def idb4(vector_y):
+    global last_db4_cD
+    real = list(idwt(vector_y, last_db4_cD, 'db4'))
+    return real
 
 
 if __name__ == '__main__':
