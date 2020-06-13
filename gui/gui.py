@@ -10,8 +10,8 @@ from core.algorithm import Algorithm
 from core.merging import merge_switcher
 from gui.conversion_tab import ConversionTab
 from gui.convolution_tab import ConvolutionTab
-from gui.plot import Plot
 from gui.transformation_tab import TransformationTab
+from plots.plot import Plot
 
 
 class Ui_MainWindow(object):
@@ -45,7 +45,7 @@ class Ui_MainWindow(object):
         self.horizontalSlider_d.setMinimum(1)
         self.horizontalSlider_d.setMaximum(10)
         self.horizontalSlider_d.setSingleStep(1)
-        self.horizontalSlider_d.setSliderPosition(3)
+        self.horizontalSlider_d.setSliderPosition(1)
         self.horizontalSlider_d.setOrientation(QtCore.Qt.Horizontal)
         self.horizontalLayout_3.addWidget(self.horizontalSlider_d)
         self.label_6 = QtWidgets.QLabel(self.verticalLayoutWidget_2)

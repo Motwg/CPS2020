@@ -7,6 +7,7 @@ from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as Navigatio
 from core import statistics as st
 from core.merging import perform_merge
 from core.utils import split_complex
+from plots.plot_switcher import plot_switcher
 
 
 class Plot(QDialog):
@@ -36,19 +37,19 @@ class Plot(QDialog):
         self.sl_bins.valueChanged.connect(self.update)
 
         self.cb_plot = QComboBox(self)
-        self.cb_plot.addItems(['W1', 'W2'])
+        self.cb_plot.addItems(['W0', 'W1', 'W2', 'W3'])
         self.cb_plot.currentIndexChanged.connect(self.update)
 
-        self.cb_hist = QComboBox(self)
-        self.cb_hist.addItems(['Img plot', 'Histogram'])
-        self.cb_hist.currentIndexChanged.connect(self.update)
+        # self.cb_hist = QComboBox(self)
+        # self.cb_hist.addItems(['Img plot', 'Histogram'])
+        # self.cb_hist.currentIndexChanged.connect(self.update)
 
         # set the upper layout
         upper_layout = QHBoxLayout()
         upper_layout.addLayout(self.create_labels())
         upper_right_layout = QVBoxLayout()
         upper_right_layout.addWidget(self.cb_plot)
-        upper_right_layout.addWidget(self.cb_hist)
+        # upper_right_layout.addWidget(self.cb_hist)
         upper_layout.addLayout(upper_right_layout)
 
         # set overall layout
@@ -70,37 +71,22 @@ class Plot(QDialog):
         self.vector_x, self.vector_y = perform_merge(self.alg1, self.alg2, self.merge_method)
         self.vector_y, self.vector_i = split_complex(self.vector_y, self.cb_plot.currentText())
 
-        # plot
-        ax = self.figure.add_subplot(211)
-        ax_i = self.figure.add_subplot(212)
-        if self.show_main:
-            ax.plot(self.vector_x, self.vector_y, linestyle='-', marker='o', color='red', markersize=1.4)
-            ax.grid(True)
-            ax.margins(0.01, 0.05)
-            ax.set_xlabel('t[s]')
-
-            if self.cb_hist.currentText() == 'Img plot':
-                # imaginary plot
-                ax_i.plot(self.vector_x, self.vector_i, linestyle='-', marker='o', color='red', markersize=1.4)
-                ax_i.grid(True)
-                ax_i.margins(0.01, 0.05)
-                ax_i.set_xlabel('t[s]') if self.cb_plot.currentText() == 'W1' else 0
-            else:
-                # histogram
-                ax_i.hist(self.vector_y, bins=self.sl_bins.value())
-                ax_i.grid(True)
-
-        for extra in self.extras:
-            if extra is not None:
-                ax.plot(extra[0], extra[1], **extra[2])
-
-        if self.cb_hist.currentText() == 'Img plot':
-            for extra in self.extras_i:
-                if extra is not None:
-                    ax_i.plot(extra[0], extra[1], **extra[2])
+        kwargs = {
+            'fig': self.figure,
+            'v_x': self.vector_x,
+            'v_y': self.vector_y,
+            'v_i': self.vector_i,
+            'bins': self.sl_bins.value(),
+            'show_main': self.show_main,
+            'extras': self.extras,
+            'extras_i': self.extras_i
+        }
+        plot_switcher(self.cb_plot.currentText())(**kwargs)
 
         self.canvas.draw()
         self.update_labels()
+        self.extras = []
+        self.extras_i = []
 
     def set_alg(self, alg1, alg2=None):
         self.alg1 = alg1

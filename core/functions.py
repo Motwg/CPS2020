@@ -17,7 +17,9 @@ def function_switcher(function_code):
         's11': s11_noise_imp,
         's101': s101,
         's102': s102,
-        's103': s103
+        's103': s103,
+        '1hz': sin1,
+        '3hz': sin3
     }
     return switcher.get(function_code, s12)
 
@@ -119,3 +121,11 @@ def s102(t, **kwargs):
 
 def s103(t, **kwargs):
     return 5 * math.sin(math.pi * t) + math.sin(8 * math.pi * t)
+
+
+def sin1(t, **kwargs):
+    return math.sin(2 * math.pi * t)
+
+
+def sin3(t, **kwargs):
+    return math.sin(6 * math.pi * t)

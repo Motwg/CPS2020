@@ -49,9 +49,10 @@ def idb4():
 
 
 if __name__ == '__main__':
-    vec = [1,0,3,4,6,0]
+    vec = np.sin(2. * np.pi / 8 * np.arange(0, 8))
     dvec = dft(vec)
     idvec = idft(dvec)
 
+    print(vec)
     print(dvec)
     print(idvec)

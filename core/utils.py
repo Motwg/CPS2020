@@ -19,7 +19,7 @@ def extend(v, length):
     return v
 
 
-def split_complex(vector, w):
+def split_complex(vector, w='W1'):
     if isinstance(vector, list) and len(vector) > 0:
         if isinstance(vector[0], complex):
             if w == 'W1':
@@ -38,4 +38,4 @@ def split_complex(vector, w):
         else:
             return vector, [0] * len(vector)
     else:
-        raise Exception('Argument should be not empty list')
+        raise Exception('Argument should not be empty list')
