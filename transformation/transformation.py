@@ -1,4 +1,5 @@
 import numpy as np
+from scipy.fft import fft, ifft
 
 
 def transformation_switcher(transformation_code):
@@ -32,12 +33,12 @@ def idft(vector_y):
     return v_y
 
 
-def fft2f():
-    pass
+def fft2f(vector_y):
+    return list(fft(vector_y, n=len(vector_y)))
 
 
-def ifft2f():
-    pass
+def ifft2f(vector_y):
+    return list(ifft(vector_y))
 
 
 def db4():
